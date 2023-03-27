@@ -6,3 +6,10 @@ export const login = (requestBody: any) => {
     requestBody
   );
 };
+
+export const logoutAPI = () => {
+  return axiosClient.post(
+    "https://admin4x-ies-product.unit.vn/admin-api/api/v1/auth/logout",
+    {}
+  );
+};

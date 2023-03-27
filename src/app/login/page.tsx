@@ -9,7 +9,11 @@ import { Typography } from "@mui/material";
 import axios from "axios";
 import axiosClient from "../api-client/axiosClient";
 import { login } from "../services/LoginService";
+import Cookies from "js-cookie";
+import { useRouter } from "next/navigation";
+
 export default function Login() {
+  const router = useRouter();
   const schema = yup.object().shape({
     username: yup.string().required(),
     password: yup.string().required(),
@@ -23,31 +27,12 @@ export default function Login() {
   });
 
   const onSubmit = (data: any) => {
-    // axios
-    //   .post("https://admin4x-ies-product.unit.vn/admin-api/api/v1/auth/login", {
-    //     username: data.username,
-    //     password: data.password,
-    //   })
-    //   .then((res) => {
-    //     console.log(res);
-    //   })
-    //   .catch((error) => {
-    //     console.log(error);
-    //     alert(error.message);
-    //   });
-    // axiosClient
-    //   .post("https://admin4x-ies-product.unit.vn/admin-api/api/v1/auth/login", {
-    //     username: data.username,
-    //     password: data.password,
-    //   })
-    //   .then((res) => {
-    //     console.log(res.data);
-    //     const token = res.data.access_token;
-    //   })
-    //   .catch((error) => {
-    //     console.log(error);
-    //   });
-    login({ username: data.username, password: data.password });
+    login({ username: data.username, password: data.password }).then((res) => {
+      Cookies.set("token", res.data.access_token);
+      if (res.status === 200) {
+        router.push("/");
+      }
+    });
   };
 
   return (
@@ -94,7 +79,32 @@ export default function Login() {
           >
             Login
           </Button>
+          <br /> <br />
         </form>
+        {/* <Button
+          color="primary"
+          type="submit"
+          fullWidth
+          style={{ padding: "12px 20px" }}
+          onClick={() => {
+            console.log(Cookies.get("token"));
+          }}
+        >
+          Log Cookie
+        </Button>
+
+        <Button
+          color="primary"
+          type="submit"
+          fullWidth
+          style={{ padding: "12px 20px" }}
+          onClick={() => {
+            Cookies.remove("token");
+            console.log(Cookies.get("token"));
+          }}
+        >
+          Remove Cookie
+        </Button> */}
       </div>
     </div>
   );
